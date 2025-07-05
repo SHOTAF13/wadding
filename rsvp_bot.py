@@ -100,6 +100,11 @@ app = Flask(__name__)
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json(force=True)
+    
+    if not data or "body" not in data:
+        print("⚠️ Webhook missing 'body'")
+        return jsonify({"status": "ignored"}), 200  
+    
     try:
         body = data["body"]
         if body["typeWebhook"] != "incomingMessageReceived":
